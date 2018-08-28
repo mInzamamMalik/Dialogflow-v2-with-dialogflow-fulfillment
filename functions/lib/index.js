@@ -15,6 +15,7 @@ exports.dialogflowFulfillment = functions.https.onRequest((request, response) =>
     // intentMap.set('your intent name here', googleAssistantHandler);
     _agent.handleRequest(intentMap);
     function welcome(agent) {
+        let params = agent.parameters;
         agent.add(`Welcome to my agent!`);
     }
     function fallback(agent) {

@@ -26,6 +26,9 @@ export const dialogflowFulfillment = functions.https.onRequest((request, respons
 
 
     function welcome(agent) {
+
+        let params = agent.parameters;
+
         agent.add(`Welcome to my agent!`);
     }
 
@@ -33,5 +36,4 @@ export const dialogflowFulfillment = functions.https.onRequest((request, respons
         agent.add(`I didn't understand`);
         agent.add(`I'm sorry, can you try again?`);
     }
-
 });
