@@ -1,8 +1,10 @@
 import * as functions from 'firebase-functions';
-
-import { WebhookClient, Card, Suggestion } from 'dialogflow-fulfillment';
-
 import * as req from 'request';
+import { WebhookClient, Card, Suggestion } from 'dialogflow-fulfillment';
+import { http } from "request-inzi"
+
+import { raw } from './core'
+import { getToken } from './helperfunctions'
 
 export const webhook = functions.https.onRequest((request, response) => {
 
@@ -14,7 +16,7 @@ export const webhook = functions.https.onRequest((request, response) => {
     // Run the proper function handler based on the matched Dialogflow intent name
     let intentMap = new Map();
 
-    // works with intent name(doesnt work with action identifier) and this intent name is *****ing case sensitive :-(
+    // works with intent name(doesnt work with action identifier) and this intent name is ****ing case sensitive :-(
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
     intentMap.set('Book Hotel', bookHotel);
@@ -25,13 +27,12 @@ export const webhook = functions.https.onRequest((request, response) => {
     _agent.handleRequest(intentMap);
 
 
-
     function welcome(agent) {
 
         let params = agent.parameters;
 
         agent.add(`Hi & welcome to TITITY™! The place for personalized gifts for any occasion!`);
-        
+
         agent.add(new Suggestion("gift a personalized song"));
         agent.add(new Suggestion("gift anything else"));
     }
@@ -54,40 +55,43 @@ export const webhook = functions.https.onRequest((request, response) => {
             return agent.add("what is your partner name?")
         } else if (params.characteristics.length == 0) {
 
-            // try {
+            try {
 
-            //     const tokenData = await getToken()
+                const availableChar = await http.get("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/getSongParts?song=multisong&part=21250_character_1")
 
-            //     console.log("tokenData: ", tokenData)
-            //     const token = `${tokenData.token_type} ${tokenData.access_token}`
-            //     console.log("token: ", token)
+                console.log("availableChar: ", availableChar);
 
-            //     const entitySuccess = await req.post({
-            //         url: `https://dialogflow.googleapis.com/v2/${raw.request.body.session}/entityTypes/`,
-            //         json: {
-            //             // "name": `${raw.request.body.session}/entityTypes/characteristics`,
-            //             "entityOverrideMode": "ENTITY_OVERRIDE_MODE_OVERRIDE",
-            //             "entities": [
-            //                 {
-            //                     "value": "some-string",
-            //                     "synonyms": ["some", "clever"]
-            //                 },
-            //                 {
-            //                     "value": "string",
-            //                     "synonyms": [" string", "bold"]
-            //                 }
-            //             ]
-            //         },
-            //         headers: { "Authorization": `Bearer ${tokenData.access_token}` }
+                const tokenData = await getToken()
 
-            //     })
-            //     console.log("entitySuccess: ", entitySuccess)
-            //     return agent.add("what is the habits of your partner")
+                console.log("tokenData: ", tokenData)
+                const token = `${tokenData.token_type} ${tokenData.access_token}`
+                console.log("token: ", token)
 
-            // } catch (e) {
-            //     console.log("an error: ", e)
-            return agent.add("an error")
-            // }
+                const entitySuccess = await req.post({
+                    url: `https://dialogflow.googleapis.com/v2/${raw.request.body.session}/entityTypes/`,
+                    headers: { "Authorization": `Bearer ${tokenData.access_token}` },
+                    json: {
+                        "name": `${raw.request.body.session}/entityTypes/characteristics`,
+                        "entityOverrideMode": "ENTITY_OVERRIDE_MODE_OVERRIDE",
+                        "entities": [
+                            {
+                                "value": "some-string",
+                                "synonyms": ["some", "clever"]
+                            },
+                            {
+                                "value": "string",
+                                "synonyms": [" string", "bold"]
+                            }
+                        ]
+                    }
+                })
+                console.log("entitySuccess: ", entitySuccess)
+                return agent.add("what is the habits of your partner")
+
+            } catch (e) {
+                console.log("an error: ", e)
+                return agent.add("an error")
+            }
 
         } else {
             agent.close(`your hotel is booked for ${params.numberOfPeople} person in ${params.geoCity} city`)
