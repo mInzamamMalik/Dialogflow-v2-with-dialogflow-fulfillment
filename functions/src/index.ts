@@ -4,7 +4,7 @@ import { WebhookClient, Card, Suggestion } from 'dialogflow-fulfillment';
 import { http } from "request-inzi"
 
 import { raw } from './core'
-import { getToken } from './helperfunctions'
+import { getToken, userEntityv2 } from './helperfunctions'
 
 export const webhook = functions.https.onRequest((request, response) => {
 
@@ -30,16 +30,16 @@ export const webhook = functions.https.onRequest((request, response) => {
     _agent.handleRequest(intentMap);
 
 
-    function welcome(agent: WebhookClient) {
+    function welcome(agent) {
 
-        console.log("agent: ", agent);
-        console.log("agent: ", agent.body);
+        console.log("agent.originalRequest: ", agent.originalRequest);
 
         let params = agent.parameters;
 
         agent.add(`Hi & welcome to TITITY™! The place for personalized gifts for any occasion!`);
 
-        agent.add([new Suggestion("gift a personalized song"), new Suggestion("gift anything else")]);
+        agent.add(new Suggestion("gift a personalized song"));
+        // new Suggestion("gift anything else")
 
     }
 
@@ -73,24 +73,40 @@ export const webhook = functions.https.onRequest((request, response) => {
                 const token = `${tokenData.token_type} ${tokenData.access_token}`
                 console.log("token: ", token)
 
-                const entitySuccess = await req.post({
-                    url: `https://dialogflow.googleapis.com/v2/${raw.request.body.session}/entityTypes/`,
-                    headers: { "Authorization": `Bearer ${tokenData.access_token}` },
-                    json: {
-                        "name": `${raw.request.body.session}/entityTypes/characteristics`,
-                        "entityOverrideMode": "ENTITY_OVERRIDE_MODE_OVERRIDE",
-                        "entities": [
-                            {
-                                "value": "some-string",
-                                "synonyms": ["some", "clever"]
-                            },
-                            {
-                                "value": "string",
-                                "synonyms": [" string", "bold"]
-                            }
-                        ]
-                    }
-                })
+
+                const entitySuccess = await userEntityv2.makeUserEntity(
+                    token,
+                    raw.request.body.session,
+                    "characteristics",
+                    [
+                        {
+                            "value": "some-string",
+                            "synonyms": ["some", "clever"]
+                        },
+                        {
+                            "value": "string",
+                            "synonyms": [" string", "bold"]
+                        }
+                    ])
+
+                // req.post({
+                //     url: `https://dialogflow.googleapis.com/v2/${raw.request.body.session}/entityTypes/`,
+                //     headers: { "Authorization": `Bearer ${tokenData.access_token}` },
+                //     json: {
+                //         "name": `${raw.request.body.session}/entityTypes/characteristics`,
+                //         "entityOverrideMode": "ENTITY_OVERRIDE_MODE_OVERRIDE",
+                //         "entities": [
+                //             {
+                //                 "value": "some-string",
+                //                 "synonyms": ["some", "clever"]
+                //             },
+                //             {
+                //                 "value": "string",
+                //                 "synonyms": [" string", "bold"]
+                //             }
+                //         ]
+                //     }
+                // })
                 console.log("entitySuccess: ", entitySuccess)
                 return agent.add("what is the habits of your partner")
 

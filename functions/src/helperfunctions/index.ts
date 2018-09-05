@@ -5,6 +5,7 @@ import { http } from './http'
 export { http } from './http'
 
 export { userEntity } from './userEntity'
+export { userEntityv2 } from './userEntityv2'
 export { Facebook } from './facebook'
 export { stringTrick } from './string'
 export { time } from './time'

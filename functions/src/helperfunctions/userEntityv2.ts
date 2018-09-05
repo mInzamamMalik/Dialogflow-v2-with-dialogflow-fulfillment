@@ -6,12 +6,12 @@ export interface entityEntry {
     "synonyms": string[]
 }
 
-export class userEntity {
+export class userEntityv2 {
 
 
     static makeUserEntity = function (
-        accessToken: "string",
-        session: RegExp = /^projects\/[^\/]+\/agent\/sessions\/[^\/]+$/,
+        accessToken: string,
+        session: string,
         entityName: string,
         entries: entityEntry[]
     ) {
@@ -21,12 +21,12 @@ export class userEntity {
             request.post({
                 url: `https://dialogflow.googleapis.com/v2/${session}/entityTypes/`,
                 headers: {
-                    "Authorization": "Bearer " + accessToken
+                    "Authorization": accessToken
                 },
                 json: {
                     "name": `${session}/entityTypes/${entityName}`,
                     "entityOverrideMode": "ENTITY_OVERRIDE_MODE_OVERRIDE",
-                    "entries": entries
+                    "entities": entries
                 }
             }, function (error: any, response: any, body: any) {
 
@@ -37,7 +37,7 @@ export class userEntity {
                     resolve(response.body);
 
                 } else {
-                    // console.log("error in making user /entity: ", response.statusCode, error);
+                    console.log("error in making user /entity: ", response.statusCode, error);
                     reject(error)
                 }
             })
