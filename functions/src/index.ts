@@ -74,20 +74,10 @@ export const webhook = functions.https.onRequest((request, response) => {
                 console.log("token: ", token)
 
 
-                const entitySuccess = await userEntityv2.makeUserEntity(
+                const entitySuccess = await userEntityv2.makeUserEntityWithArray(
                     token,
                     raw.request.body.session,
-                    "characteristics",
-                    [
-                        {
-                            "value": "some-string",
-                            "synonyms": ["some", "clever"]
-                        },
-                        {
-                            "value": "string",
-                            "synonyms": [" string", "bold"]
-                        }
-                    ])
+                    "characteristics", ["clever", "bold"])
 
                 // req.post({
                 //     url: `https://dialogflow.googleapis.com/v2/${raw.request.body.session}/entityTypes/`,
@@ -116,7 +106,7 @@ export const webhook = functions.https.onRequest((request, response) => {
             }
 
         } else {
-            return agent.end(`your hotel is booked for ${params.numberOfPeople} person in ${params.geoCity} city`)
+            return agent.add(`your hotel is booked for ${params.numberOfPeople} person in ${params.geoCity} city`)
         }
     }
 

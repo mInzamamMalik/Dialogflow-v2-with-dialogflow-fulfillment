@@ -45,7 +45,13 @@ export class userEntityv2 {
     }//makeUserEntity end
 
 
-    static makeUserEntityWithArray = function (sessionId: string, entityName: string, entries: string[], isDry = false) {
+    static makeUserEntityWithArray = function (
+        accessToken: string,
+        session: string,
+        entityName: string,
+        entries: string[],
+        isDry = false
+    ) {
         return new Promise((resolve, reject) => {
 
             const newentityEntry: entityEntry[] = [];
@@ -94,7 +100,7 @@ export class userEntityv2 {
                     synonyms: synonyms // synonyms looks like: ["geo fence group", "1", "1st", "first"]
                 })
             })
-            this.makeUserEntity(sessionId, entityName, newentityEntry).then(response => {
+            this.makeUserEntity(accessToken, session, entityName, newentityEntry).then(response => {
                 resolve(response)
             })
         })//promise end
