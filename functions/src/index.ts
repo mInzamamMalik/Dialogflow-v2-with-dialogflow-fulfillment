@@ -8,6 +8,9 @@ import { getToken } from './helperfunctions'
 
 export const webhook = functions.https.onRequest((request, response) => {
 
+    raw.request = request; // preserving raw request for later use
+    raw.response = response;
+
     const _agent = new WebhookClient({ request: request, response: response });
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
@@ -27,14 +30,17 @@ export const webhook = functions.https.onRequest((request, response) => {
     _agent.handleRequest(intentMap);
 
 
-    function welcome(agent) {
+    function welcome(agent: WebhookClient) {
+
+        console.log("agent: ", agent);
+        console.log("agent: ", agent.body);
 
         let params = agent.parameters;
 
         agent.add(`Hi & welcome to TITITY™! The place for personalized gifts for any occasion!`);
 
-        agent.add(new Suggestion("gift a personalized song"));
-        agent.add(new Suggestion("gift anything else"));
+        agent.add([new Suggestion("gift a personalized song"), new Suggestion("gift anything else")]);
+
     }
 
 
@@ -94,7 +100,7 @@ export const webhook = functions.https.onRequest((request, response) => {
             }
 
         } else {
-            agent.close(`your hotel is booked for ${params.numberOfPeople} person in ${params.geoCity} city`)
+            return agent.end(`your hotel is booked for ${params.numberOfPeople} person in ${params.geoCity} city`)
         }
     }
 
