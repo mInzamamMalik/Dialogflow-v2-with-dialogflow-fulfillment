@@ -59,11 +59,12 @@ export const webhook = functions.https.onRequest((request, response) => {
             return agent.add("what is your name?")
         } else if (!params.recipientsname) {
             return agent.add("what is your partner name?")
+
         } else if (params.characteristics.length == 0) {
 
             try {
 
-                const availableChar = await http.get("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/getSongParts?song=multisong&part=21250_character_1")
+                const availableChar: string[] = await http.get("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/getSongParts?song=multisong&part=21250_character_1")
 
                 console.log("availableChar: ", availableChar);
 
@@ -74,39 +75,34 @@ export const webhook = functions.https.onRequest((request, response) => {
                 console.log("token: ", token)
 
 
-                const entitySuccess = await userEntityv2.makeUserEntityWithArray(
+                let entitySuccess = await userEntityv2.makeUserEntityWithArray(
                     token,
                     raw.request.body.session,
-                    "characteristics", ["clever", "bold"])
-
-                // req.post({
-                //     url: `https://dialogflow.googleapis.com/v2/${raw.request.body.session}/entityTypes/`,
-                //     headers: { "Authorization": `Bearer ${tokenData.access_token}` },
-                //     json: {
-                //         "name": `${raw.request.body.session}/entityTypes/characteristics`,
-                //         "entityOverrideMode": "ENTITY_OVERRIDE_MODE_OVERRIDE",
-                //         "entities": [
-                //             {
-                //                 "value": "some-string",
-                //                 "synonyms": ["some", "clever"]
-                //             },
-                //             {
-                //                 "value": "string",
-                //                 "synonyms": [" string", "bold"]
-                //             }
-                //         ]
-                //     }
-                // })
+                    "characteristics",
+                    availableChar)
                 console.log("entitySuccess: ", entitySuccess)
-                return agent.add("what is the habits of your partner")
+
+
+                return agent.add("what is the habits of your partner: " + availableChar)
 
             } catch (e) {
                 console.log("an error: ", e)
                 return agent.add("an error")
             }
 
+
+
+
+            // } else if (params.verbs.length == 0) {
+
+            //     return agent.add("what are verbs of your partner")
+
+            // } else if (params.backingTracks.length == 0) {
+
+            //     return agent.add("what is your partner backing tracks")
+
         } else {
-            return agent.add(`your hotel is booked for ${params.numberOfPeople} person in ${params.geoCity} city`)
+            return agent.add(`song is generated`)
         }
     }
 
