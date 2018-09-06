@@ -76,7 +76,6 @@ export const webhook = functions.https.onRequest((request, response) => {
 
 
                 let entitySuccess = await userEntityv2.makeUserEntityWithArray(
-                    token,
                     raw.request.body.session,
                     "characteristics",
                     availableChar)

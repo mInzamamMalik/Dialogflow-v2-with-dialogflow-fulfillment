@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions'
 import * as request from 'request'
+import { getToken } from './OAuth'
 
 export interface entityEntry {
     "value": string,
@@ -9,12 +10,16 @@ export interface entityEntry {
 export class userEntityv2 {
 
 
-    static makeUserEntity = function (
-        accessToken: string,
+    static makeUserEntity = async function (
         session: string,
         entityName: string,
         entries: entityEntry[]
     ) {
+
+        const tokenData = await getToken()
+        console.log("tokenData: ", tokenData)
+        const accessToken = `${tokenData.token_type} ${tokenData.access_token}`
+        console.log("accessToken: ", accessToken)
 
         return new Promise((resolve, reject) => {
             // adding all organizations in apiai userEntity
@@ -46,7 +51,6 @@ export class userEntityv2 {
 
 
     static makeUserEntityWithArray = async (
-        accessToken: string,
         session: string,
         entityName: string,
         entries: string[],
@@ -99,7 +103,7 @@ export class userEntityv2 {
                 synonyms: synonyms // synonyms looks like: ["geo fence group", "1", "1st", "first"]
             })
         })
-        const result = await userEntityv2.makeUserEntity(accessToken, session, entityName, newentityEntry)
+        const result = await userEntityv2.makeUserEntity(session, entityName, newentityEntry)
         return result
 
         // .catch(e => {
