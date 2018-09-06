@@ -4,7 +4,7 @@ import { WebhookClient, Card, Suggestion } from 'dialogflow-fulfillment';
 import { http } from "request-inzi"
 
 import { raw } from './core'
-import { getToken, userEntityv2 } from './helperfunctions'
+import { userEntityv2 } from './helperfunctions'
 
 export const webhook = functions.https.onRequest((request, response) => {
 
@@ -67,13 +67,6 @@ export const webhook = functions.https.onRequest((request, response) => {
                 const availableChar: string[] = await http.get("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/getSongParts?song=multisong&part=21250_character_1")
 
                 console.log("availableChar: ", availableChar);
-
-                const tokenData = await getToken()
-
-                console.log("tokenData: ", tokenData)
-                const token = `${tokenData.token_type} ${tokenData.access_token}`
-                console.log("token: ", token)
-
 
                 let entitySuccess = await userEntityv2.makeUserEntityWithArray(
                     raw.request.body.session,

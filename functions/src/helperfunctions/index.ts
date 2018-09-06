@@ -9,7 +9,7 @@ export { userEntityv2 } from './userEntityv2'
 export { Facebook } from './facebook'
 export { stringTrick } from './string'
 export { time } from './time'
-export { getToken } from './OAuth'
+
 
 
 // export const addMessage = (userId, userMessage, botMessage) => {
