@@ -59,39 +59,52 @@ export const webhook = functions.https.onRequest((request, response) => {
             return agent.add("what is your name?")
         } else if (!params.recipientsname) {
             return agent.add("what is your partner name?")
+        } else if (params.characteristics.length == 0) { // choose upto 3 options
 
-        } else if (params.characteristics.length == 0) {
+            const availableChar: string[] = await http.get("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/getSongParts?song=multisong&part=21250_character_1")
+            console.log("availableChar: ", availableChar);
 
-            try {
+            let entitySuccess = await userEntityv2.makeUserEntityWithArray(
+                raw.request.body.session,
+                "characteristics",
+                availableChar)
+            console.log("entitySuccess: ", entitySuccess)
 
-                const availableChar: string[] = await http.get("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/getSongParts?song=multisong&part=21250_character_1")
+            return agent.add(`what are the characteristics of ${params.recipientsname}?\n\
+select three of the following:\n\
+${availableChar.toString()}`)
 
-                console.log("availableChar: ", availableChar);
+        } else if (params.verbs.length == 0) { // choose upto 2 options
 
-                let entitySuccess = await userEntityv2.makeUserEntityWithArray(
-                    raw.request.body.session,
-                    "characteristics",
-                    availableChar)
-                console.log("entitySuccess: ", entitySuccess)
+            const availableVerbs: string[] = await http.get("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/getSongParts?song=multisong&part=26100_verb_1")
+            console.log("availableVerbs: ", availableVerbs);
 
+            let entitySuccess = await userEntityv2.makeUserEntityWithArray(
+                raw.request.body.session,
+                "verbs",
+                availableVerbs)
+            console.log("entitySuccess: ", entitySuccess)
 
-                return agent.add("what is the habits of your partner: " + availableChar)
-
-            } catch (e) {
-                console.log("an error: ", e)
-                return agent.add("an error")
-            }
-
+            return agent.add(`what are the verbs of ${params.recipientsname}?\n\
+select three of the following:\n\
+${availableVerbs.toString()}`)
 
 
+        } else if (params.backingTracks.length == 0) {
 
-            // } else if (params.verbs.length == 0) {
+            const availableBackingTracks: string[] = await http.get("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/getSongParts?song=multisong&part=00000_backingtracks")
+            console.log("availableBackingTracks: ", availableBackingTracks);
 
-            //     return agent.add("what are verbs of your partner")
+            let entitySuccess = await userEntityv2.makeUserEntityWithArray(
+                raw.request.body.session,
+                "backingTracks",
+                availableBackingTracks)
+            console.log("entitySuccess: ", entitySuccess)
 
-            // } else if (params.backingTracks.length == 0) {
+            return agent.add(`what are the backingTracks of ${params.recipientsname}?\n\
+select three of the following:\n\
+${availableBackingTracks.toString()}`)
 
-            //     return agent.add("what is your partner backing tracks")
 
         } else {
             return agent.add(`song is generated`)
