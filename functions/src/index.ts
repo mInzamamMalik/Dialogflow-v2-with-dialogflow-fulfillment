@@ -90,24 +90,49 @@ select three of the following:\n\
 ${availableVerbs.toString()}`)
 
 
-        } else if (params.backingTracks.length == 0) {
+        } else if (params.backingTrack.length == 0) {
 
             const availableBackingTracks: string[] = await http.get("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/getSongParts?song=multisong&part=00000_backingtracks")
             console.log("availableBackingTracks: ", availableBackingTracks);
 
             let entitySuccess = await userEntityv2.makeUserEntityWithArray(
                 raw.request.body.session,
-                "backingTracks",
+                "backingTrack",
                 availableBackingTracks)
             console.log("entitySuccess: ", entitySuccess)
 
-            return agent.add(`what are the backingTracks of ${params.recipientsname}?\n\
+            return agent.add(`what are the backingTrack of ${params.recipientsname}?\n\
 select three of the following:\n\
 ${availableBackingTracks.toString()}`)
 
 
         } else {
-            return agent.add(`song is generated`)
+
+            let partList = [];
+
+            // 1)
+            partList.push("02050_names/" + params.recipientsname)
+            // 2) 
+            partList.push("21250_character_1/" + params.characteristics[0])
+            if (params.characteristics && params.characteristics[1]) partList.push("22450_character_2/" + params.characteristics[1])
+            if (params.characteristics && params.characteristics[2]) partList.push("23650_character_3/" + params.characteristics[2])
+            // 3)
+            partList.push("26100_verb_1/" + params.verbs[0])
+            if (params.verbs[1]) partList.push("27300_verb_2/" + params.verbs[1])
+            // 4)
+            partList.push("00000_backingtracks/" + params.backingTrack)
+
+
+            const song = await http.post("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/generateSong", {
+                filename: "abc.mp3",
+                title: "sample title",
+                partList: partList
+            }).catch(e => {
+                console.log("error making genrate song call: ", e);
+                return agent.add("an error in song call")
+            })
+
+            return agent.add(`here is the personalized song for ${params.recipientsname}`)
         }
     }
 
