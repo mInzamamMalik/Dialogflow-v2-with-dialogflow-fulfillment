@@ -1,0 +1,69 @@
+{
+  "id": "82f8a45a-cd9f-433b-b56f-72b6d299444c",
+  "name": "Book Hotel",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "gen_song",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "c420871b-3d31-440f-872a-e9923dcd2ade",
+          "required": true,
+          "dataType": "@sys.given-name",
+          "name": "name",
+          "value": "$name",
+          "isList": false
+        },
+        {
+          "id": "e0ac981f-b81c-4daa-8d77-d03a16ddf2c5",
+          "required": true,
+          "dataType": "@sys.given-name",
+          "name": "recipientsname",
+          "value": "$recipientsname",
+          "isList": false
+        },
+        {
+          "id": "1c8b4484-b858-4a5a-8b80-6b59ee1f82ee",
+          "required": true,
+          "dataType": "@characteristics",
+          "name": "characteristics",
+          "value": "$characteristics",
+          "isList": true
+        },
+        {
+          "id": "69f004c0-be81-4cb5-85e6-97fc6b17e09e",
+          "required": true,
+          "dataType": "@verbs",
+          "name": "verbs",
+          "value": "$verbs",
+          "isList": true
+        },
+        {
+          "id": "bc960c0a-0be2-4de1-b5d3-1718290af1f4",
+          "required": true,
+          "dataType": "@backingTracks",
+          "name": "backingTracks",
+          "value": "$backingTracks"
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "en",
+          "speech": "something went wrong"
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": true,
+  "lastUpdate": 1536255779,
+  "fallbackIntent": false,
+  "events": []
+}

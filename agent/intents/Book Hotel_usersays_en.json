@@ -1,0 +1,78 @@
+[
+  {
+    "id": "ec106125-6364-4faf-af85-dbb0f70ffdc8",
+    "data": [
+      {
+        "text": "characteristics are ",
+        "userDefined": false
+      },
+      {
+        "text": "abc",
+        "alias": "characteristics",
+        "meta": "@characteristics",
+        "userDefined": true
+      },
+      {
+        "text": " and ",
+        "userDefined": false
+      },
+      {
+        "text": "def",
+        "alias": "characteristics",
+        "meta": "@characteristics",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1536010822
+  },
+  {
+    "id": "8bce912d-b825-467b-bb3a-eb68c9a8aaf2",
+    "data": [
+      {
+        "text": "her name is ",
+        "userDefined": false
+      },
+      {
+        "text": "Alice",
+        "alias": "recipientsname",
+        "meta": "@sys.given-name",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1536008505
+  },
+  {
+    "id": "37d313b1-c280-48c9-857c-e98774e63429",
+    "data": [
+      {
+        "text": "my name is ",
+        "userDefined": false
+      },
+      {
+        "text": "john",
+        "alias": "name",
+        "meta": "@sys.given-name",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1536008505
+  },
+  {
+    "id": "8e12aa3f-6057-4a4f-b885-23f7c810016a",
+    "data": [
+      {
+        "text": "gift a personalized song",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "updated": 1536008505
+  }
+]
