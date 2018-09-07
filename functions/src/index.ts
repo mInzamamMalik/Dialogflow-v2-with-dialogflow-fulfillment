@@ -109,20 +109,28 @@ ${availableBackingTracks.toString()}`)
         } else {
 
             let partList = [];
-
+            
             // 1)
-            partList.push("02050_names/" + params.recipientsname)
-            // 2) 
+            partList.push("00000_backingtracks/" + params.backingTrack)
+            
+            // 2)
+            partList.push("00000_prerecorded_vocal/prerecordedvocal")
+            
+            // 3)
+            partList.push("02050_names/" + params.recipientsname.toLowerCase())
+            
+            // 4)
+            partList.push("05850_occasion/anniversary")
+
+            // 5) 
             partList.push("21250_character_1/" + params.characteristics[0])
             if (params.characteristics && params.characteristics[1]) partList.push("22450_character_2/" + params.characteristics[1])
             if (params.characteristics && params.characteristics[2]) partList.push("23650_character_3/" + params.characteristics[2])
-            // 3)
+            
+            // 6)
             partList.push("26100_verb_1/" + params.verbs[0])
             if (params.verbs[1]) partList.push("27300_verb_2/" + params.verbs[1])
-            // 4)
-            partList.push("00000_backingtracks/" + params.backingTrack)
-
-
+            
             const song = await http.post("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/generateSong", {
                 filename: "abc.mp3",
                 title: "sample title",
@@ -132,7 +140,7 @@ ${availableBackingTracks.toString()}`)
                 return agent.add("an error in song call")
             })
 
-            return agent.add(`here is the personalized song for ${params.recipientsname}`)
+            return agent.add(`here is the personalized song for ${params.recipientsname}: ${song.url}`)
         }
     }
 
