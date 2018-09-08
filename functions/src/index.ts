@@ -64,7 +64,8 @@ export const webhook = functions.https.onRequest((request, response) => {
                     }
                 },
                 {
-                    payload: {
+                    "platform": "FACEBOOK",
+                    "payload": {
                         "facebook": {
                             "attachment": {
                                 "type": "audio",
