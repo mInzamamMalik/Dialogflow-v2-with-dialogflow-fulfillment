@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as req from 'request';
-import { WebhookClient, Card, Suggestion } from 'dialogflow-fulfillment';
+import { WebhookClient, Card, Suggestion, Payload, PLATFORMS } from 'dialogflow-fulfillment';
 import { http } from "request-inzi"
 
 import { raw } from './core'
@@ -36,11 +36,58 @@ export const webhook = functions.https.onRequest((request, response) => {
 
         let params = agent.parameters;
 
-        agent.add(`Hi & welcome to TITITY™! The place for personalized gifts for any occasion!`);
+        // agent.add(`Hi & welcome to TITITY™! The place for personalized gifts for any occasion!`);
 
-        agent.add(new Suggestion("gift a personalized song"));
-        // new Suggestion("gift anything else")
+        // agent.add(new Suggestion("gift a personalized song"));
+        // 
 
+        // const facebookPayloadJson = {
+        //     expectUserResponse: true,
+        //     isSsml: false,
+        //     noInputPrompts: [],
+        //     richResponse: {
+        //         items: [{ simpleResponse: { textToSpeech: 'hello', displayText: 'hi' } }]
+        //     },
+        //     systemIntent: {
+        //         intent: 'actions.intent.OPTION',
+        //     }
+        // }
+        // let payload = new Payload(PLATFORMS.FACEBOOK, {});
+        // payload.setPayload(googlePayloadJson);
+
+        raw.response.send({
+            "fulfillmentText": "hello world",
+            "fulfillmentMessages": [
+                {
+                    "text": {
+                        text: ["some text message"]
+                    }
+                },
+                {
+                    payload: {
+                        "facebook": {
+                            "attachment": {
+                                "type": "audio",
+                                "payload": {
+                                    "url": "https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3"
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            // "source": "string",
+            // "payload": {
+            //     "facebook": {
+            //         "attachment": {
+            //             "type": "audio",
+            //             "payload": {
+            //                 "url": "https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3"
+            //             }
+            //         }
+            //     }
+            // }
+        })
     }
 
 
@@ -56,9 +103,10 @@ export const webhook = functions.https.onRequest((request, response) => {
         console.log("params: ", params)
 
         if (!params.name) {
-            return agent.add("what is your name?")
+            return agent.add("What is your first name?")
         } else if (!params.recipientsname) {
-            return agent.add("what is your partner name?")
+            agent.add(`It's nice to meet you ${params.name}?`)
+            return agent.add("Who is this one of a kind gift for?")
         } else if (params.characteristics.length == 0) { // choose upto 3 options
 
             const availableChar: string[] = await http.get("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/getSongParts?song=multisong&part=21250_character_1")
@@ -70,7 +118,7 @@ export const webhook = functions.https.onRequest((request, response) => {
                 availableChar)
             console.log("entitySuccess: ", entitySuccess)
 
-            return agent.add(`what are the characteristics of ${params.recipientsname}?\n\
+            return agent.add(`What is ${params.recipientsname} like? ${params.recipientsname}?\n\
 select three of the following:\n\
 ${availableChar.toString()}`)
 
@@ -85,12 +133,12 @@ ${availableChar.toString()}`)
                 availableVerbs)
             console.log("entitySuccess: ", entitySuccess)
 
-            return agent.add(`what are the verbs of ${params.recipientsname}?\n\
-select three of the following:\n\
+            return agent.add(`What does  ${params.recipientsname} like to do?\n\
+select two of the following:\n\
 ${availableVerbs.toString()}`)
 
 
-        } else if (params.backingTrack.length == 0) {
+        } else if (!params.backingTrack) {
 
             const availableBackingTracks: string[] = await http.get("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/getSongParts?song=multisong&part=00000_backingtracks")
             console.log("availableBackingTracks: ", availableBackingTracks);
@@ -101,24 +149,23 @@ ${availableVerbs.toString()}`)
                 availableBackingTracks)
             console.log("entitySuccess: ", entitySuccess)
 
-            return agent.add(`what are the backingTrack of ${params.recipientsname}?\n\
-select three of the following:\n\
+            return agent.add(`What is the style song would you like for ${params.recipientsname} to be like?\n\
 ${availableBackingTracks.toString()}`)
 
 
         } else {
 
             let partList = [];
-            
+
             // 1)
             partList.push("00000_backingtracks/" + params.backingTrack)
-            
+
             // 2)
             partList.push("00000_prerecorded_vocal/prerecordedvocal")
-            
+
             // 3)
             partList.push("02050_names/" + params.recipientsname.toLowerCase())
-            
+
             // 4)
             partList.push("05850_occasion/anniversary")
 
@@ -126,11 +173,11 @@ ${availableBackingTracks.toString()}`)
             partList.push("21250_character_1/" + params.characteristics[0])
             if (params.characteristics && params.characteristics[1]) partList.push("22450_character_2/" + params.characteristics[1])
             if (params.characteristics && params.characteristics[2]) partList.push("23650_character_3/" + params.characteristics[2])
-            
+
             // 6)
             partList.push("26100_verb_1/" + params.verbs[0])
             if (params.verbs[1]) partList.push("27300_verb_2/" + params.verbs[1])
-            
+
             const song = await http.post("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/generateSong", {
                 filename: "abc.mp3",
                 title: "sample title",
@@ -140,7 +187,7 @@ ${availableBackingTracks.toString()}`)
                 return agent.add("an error in song call")
             })
 
-            return agent.add(`here is the personalized song for ${params.recipientsname}: ${song.url}`)
+            return agent.add(`here is the personalized song for ${params.recipientsname}:\n ${song.url}`)
         }
     }
 
