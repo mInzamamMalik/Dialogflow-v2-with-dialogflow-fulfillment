@@ -31,41 +31,6 @@ export const webhook = functions.https.onRequest((request, response) => {
 
 
     function welcome(agent) {
-
-
-        raw.response.send({
-            "fulfillmentText": "hello world",
-            "fulfillmentMessages": [
-                {
-                    "text": {
-                        "text": ["facebook text"]
-                    },
-                    "platform": "FACEBOOK"
-                },
-                {
-                    "text": {
-                        "text": ["normal text"]
-                    }
-                },
-                { // this sometime doesnt work in messenger win10 app
-                    "platform": "FACEBOOK",
-                    "payload": {
-                        "facebook": {
-                            "attachment": {
-                                "type": "audio",
-                                "payload": {
-                                    "url": "https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3"
-                                }
-                            }
-                        }
-                    }
-                }
-            ]
-        })
-
-
-
-
         console.log("agent.originalRequest: ", agent.originalRequest);
 
         let params = agent.parameters;
@@ -179,7 +144,6 @@ ${availableBackingTracks.join(", ")}`)
                 return agent.add("an error in song call")
             })
 
-            agent.add(`here is the personalized song for ${params.recipientsname}:\n ${song.url}`)
 
 
             return raw.response.send({
@@ -187,28 +151,41 @@ ${availableBackingTracks.join(", ")}`)
                 "fulfillmentMessages": [
                     {
                         "text": {
-                            text: ["some text message"]
+                            "text": ["normal text"] // normal text will override with platform specific text
                         }
+                    },
+                    {
+                        "text": {
+                            "text": [`here is the personalized song for ${params.recipientsname}:`]
+                        },
+                        "platform": "FACEBOOK"
                     },
                     {
                         "platform": "FACEBOOK",
                         "payload": {
-                            "text": "hello, world!"
+                            "facebook": {
+                                "attachment": {
+                                    "type": "audio",
+                                    "payload": {
+                                        "url": song.url
+                                    }
+                                }
+                            }
                         }
                     },
-                    // {
-                    //     "platform": "FACEBOOK",
-                    //     "payload": {
-                    //         "facebook": {
-                    //             "attachment": {
-                    //                 "type": "audio",
-                    //                 "payload": {
-                    //                     "url": song.url
-                    //                 }
-                    //             }
-                    //         }
-                    //     }
-                    // }
+                    {
+                        "text": {
+                            "text": [`here is the the url of song:`]
+                        },
+                        "platform": "FACEBOOK"
+                    },
+                    {
+                        "text": {
+                            "text": [song.url]
+                        },
+                        "platform": "FACEBOOK"
+                    },
+
                 ]
             })
         }
