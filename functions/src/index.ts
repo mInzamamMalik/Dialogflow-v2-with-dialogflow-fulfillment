@@ -32,6 +32,40 @@ export const webhook = functions.https.onRequest((request, response) => {
 
     function welcome(agent) {
 
+
+        raw.response.send({
+            "fulfillmentText": "hello world",
+            "fulfillmentMessages": [
+                {
+                    "text": {
+                        "text": ["facebook text"]
+                    },
+                    "platform": "FACEBOOK"
+                },
+                {
+                    "text": {
+                        "text": ["normal text"]
+                    }
+                },
+                { // this sometime doesnt work in messenger win10 app
+                    "platform": "FACEBOOK",
+                    "payload": {
+                        "facebook": {
+                            "attachment": {
+                                "type": "audio",
+                                "payload": {
+                                    "url": "https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        })
+
+
+
+
         console.log("agent.originalRequest: ", agent.originalRequest);
 
         let params = agent.parameters;
@@ -73,7 +107,7 @@ export const webhook = functions.https.onRequest((request, response) => {
 
             return agent.add(`What is ${params.recipientsname} like?\n\
 select three of the following:\n\
-${availableChar.toString()}`)
+${availableChar.join(", ")}`)
 
         } else if (params.verbs.length == 0) { // choose upto 2 options
 
@@ -88,7 +122,7 @@ ${availableChar.toString()}`)
 
             return agent.add(`What does  ${params.recipientsname} like to do?\n\
 select two of the following:\n\
-${availableVerbs.toString()}`)
+${availableVerbs.join(", ")}`)
 
 
         } else if (!params.backingTrack) {
@@ -108,7 +142,7 @@ ${availableVerbs.toString()}`)
             })
 
             agent.add(`What is the style song would you like for ${params.recipientsname} to be like?\n\
-${availableBackingTracks.toString()}`)
+${availableBackingTracks.join(", ")}`)
             return agent.add(suggestion)
 
         } else {
@@ -159,16 +193,22 @@ ${availableBackingTracks.toString()}`)
                     {
                         "platform": "FACEBOOK",
                         "payload": {
-                            "facebook": {
-                                "attachment": {
-                                    "type": "audio",
-                                    "payload": {
-                                        "url": song.url
-                                    }
-                                }
-                            }
+                            "text": "hello, world!"
                         }
-                    }
+                    },
+                    // {
+                    //     "platform": "FACEBOOK",
+                    //     "payload": {
+                    //         "facebook": {
+                    //             "attachment": {
+                    //                 "type": "audio",
+                    //                 "payload": {
+                    //                     "url": song.url
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 ]
             })
         }
