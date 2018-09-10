@@ -11,17 +11,25 @@
       "parameters": [],
       "messages": [
         {
-          "type": "suggestion_chips",
-          "platform": "google",
+          "type": 0,
+          "platform": "facebook",
           "lang": "en",
-          "suggestions": [
-            {
-              "title": "Gift a Personalized Song"
-            },
-            {
-              "title": "gift anything else"
+          "speech": "aseffsdfsdf"
+        },
+        {
+          "type": 4,
+          "platform": "facebook",
+          "lang": "en",
+          "payload": {
+            "facebook": {
+              "attachment": {
+                "type": "audio",
+                "payload": {
+                  "url": "adfsfsdfsdf"
+                }
+              }
             }
-          ]
+          }
         },
         {
           "type": 0,
@@ -30,7 +38,8 @@
         }
       ],
       "defaultResponsePlatforms": {
-        "google": true
+        "google": true,
+        "facebook": true
       },
       "speech": []
     }
@@ -38,7 +47,7 @@
   "priority": 500000,
   "webhookUsed": true,
   "webhookForSlotFilling": false,
-  "lastUpdate": 1536009156,
+  "lastUpdate": 1536595629,
   "fallbackIntent": false,
   "events": [
     {

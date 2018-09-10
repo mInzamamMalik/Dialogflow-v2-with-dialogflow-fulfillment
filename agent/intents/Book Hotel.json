@@ -44,9 +44,10 @@
         {
           "id": "bc960c0a-0be2-4de1-b5d3-1718290af1f4",
           "required": true,
-          "dataType": "@backingTracks",
-          "name": "backingTracks",
-          "value": "$backingTracks"
+          "dataType": "@backingTrack",
+          "name": "backingTrack",
+          "value": "$backingTrack",
+          "isList": false
         }
       ],
       "messages": [
@@ -63,7 +64,7 @@
   "priority": 500000,
   "webhookUsed": true,
   "webhookForSlotFilling": true,
-  "lastUpdate": 1536255779,
+  "lastUpdate": 1536256414,
   "fallbackIntent": false,
   "events": []
 }
