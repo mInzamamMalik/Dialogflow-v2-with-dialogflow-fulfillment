@@ -36,59 +36,11 @@ export const webhook = functions.https.onRequest((request, response) => {
 
         let params = agent.parameters;
 
-        // agent.add(`Hi & welcome to TITITY™! The place for personalized gifts for any occasion!`);
+        agent.add(`Hi & welcome to TITITY™! The place for personalized gifts for any occasion!`);
 
-        // agent.add(new Suggestion("gift a personalized song"));
-        // 
-
-        // const facebookPayloadJson = {
-        //     expectUserResponse: true,
-        //     isSsml: false,
-        //     noInputPrompts: [],
-        //     richResponse: {
-        //         items: [{ simpleResponse: { textToSpeech: 'hello', displayText: 'hi' } }]
-        //     },
-        //     systemIntent: {
-        //         intent: 'actions.intent.OPTION',
-        //     }
-        // }
-        // let payload = new Payload(PLATFORMS.FACEBOOK, {});
-        // payload.setPayload(googlePayloadJson);
-
-        raw.response.send({
-            "fulfillmentText": "hello world",
-            "fulfillmentMessages": [
-                {
-                    "text": {
-                        text: ["some text message"]
-                    }
-                },
-                {
-                    "platform": "FACEBOOK",
-                    "payload": {
-                        "facebook": {
-                            "attachment": {
-                                "type": "audio",
-                                "payload": {
-                                    "url": "https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3"
-                                }
-                            }
-                        }
-                    }
-                }
-            ],
-            // "source": "string",
-            // "payload": {
-            //     "facebook": {
-            //         "attachment": {
-            //             "type": "audio",
-            //             "payload": {
-            //                 "url": "https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3"
-            //             }
-            //         }
-            //     }
-            // }
-        })
+        let suggestion = new Suggestion("gift a personalized song")
+        // suggestion.addReply_('another reply');
+        agent.add(suggestion)
     }
 
 
@@ -106,7 +58,7 @@ export const webhook = functions.https.onRequest((request, response) => {
         if (!params.name) {
             return agent.add("What is your first name?")
         } else if (!params.recipientsname) {
-            agent.add(`It's nice to meet you ${params.name}?`)
+            agent.add(`It's nice to meet you ${params.name}`)
             return agent.add("Who is this one of a kind gift for?")
         } else if (params.characteristics.length == 0) { // choose upto 3 options
 
@@ -119,7 +71,7 @@ export const webhook = functions.https.onRequest((request, response) => {
                 availableChar)
             console.log("entitySuccess: ", entitySuccess)
 
-            return agent.add(`What is ${params.recipientsname} like? ${params.recipientsname}?\n\
+            return agent.add(`What is ${params.recipientsname} like?\n\
 select three of the following:\n\
 ${availableChar.toString()}`)
 
@@ -150,9 +102,14 @@ ${availableVerbs.toString()}`)
                 availableBackingTracks)
             console.log("entitySuccess: ", entitySuccess)
 
-            return agent.add(`What is the style song would you like for ${params.recipientsname} to be like?\n\
-${availableBackingTracks.toString()}`)
+            let suggestion = new Suggestion("")
+            availableBackingTracks.map(eachItem => {
+                suggestion.addReply_(eachItem);
+            })
 
+            agent.add(`What is the style song would you like for ${params.recipientsname} to be like?\n\
+${availableBackingTracks.toString()}`)
+            return agent.add(suggestion)
 
         } else {
 
@@ -188,7 +145,32 @@ ${availableBackingTracks.toString()}`)
                 return agent.add("an error in song call")
             })
 
-            return agent.add(`here is the personalized song for ${params.recipientsname}:\n ${song.url}`)
+            agent.add(`here is the personalized song for ${params.recipientsname}:\n ${song.url}`)
+
+
+            return raw.response.send({
+                "fulfillmentText": "hello world",
+                "fulfillmentMessages": [
+                    {
+                        "text": {
+                            text: ["some text message"]
+                        }
+                    },
+                    {
+                        "platform": "FACEBOOK",
+                        "payload": {
+                            "facebook": {
+                                "attachment": {
+                                    "type": "audio",
+                                    "payload": {
+                                        "url": song.url
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            })
         }
     }
 
