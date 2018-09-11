@@ -35,9 +35,9 @@ export const webhook = functions.https.onRequest((request, response) => {
 
         let params = agent.parameters;
 
-        agent.add(`Hi & welcome to TITITY™! The place for personalized gifts for any occasion!`);
+        agent.add(`Hi & welcome to Persongify. The place for personalized songs!`);
 
-        let suggestion = new Suggestion("gift a personalized song")
+        let suggestion = new Suggestion("Make a Song")
         // suggestion.addReply_('another reply');
         agent.add(suggestion)
     }
@@ -55,10 +55,14 @@ export const webhook = functions.https.onRequest((request, response) => {
         console.log("params: ", params)
 
         if (!params.name) {
+        
             return agent.add("What is your first name?")
+        
         } else if (!params.recipientsname) {
+
             agent.add(`It's nice to meet you ${params.name}`)
-            return agent.add("Who is this one of a kind gift for?")
+            return agent.add("Who is this one of a kind song for?")
+        
         } else if (params.characteristics.length == 0) { // choose upto 3 options
 
             const availableChar: string[] = await http.get("https://h5zonparv9.execute-api.us-west-1.amazonaws.com/dev/getSongParts?song=multisong&part=21250_character_1")
@@ -175,16 +179,22 @@ ${availableBackingTracks.join(", ")}`)
                     },
                     {
                         "text": {
-                            "text": [`here is the the url of song:`]
+                            "text": [`Thank You`]
                         },
                         "platform": "FACEBOOK"
                     },
-                    {
-                        "text": {
-                            "text": [song.url]
-                        },
-                        "platform": "FACEBOOK"
-                    },
+                    // {
+                    //     "text": {
+                    //         "text": [`here is the the url of song:`]
+                    //     },
+                    //     "platform": "FACEBOOK"
+                    // },
+                    // {
+                    //     "text": {
+                    //         "text": [song.url]
+                    //     },
+                    //     "platform": "FACEBOOK"
+                    // },
 
                 ]
             })

@@ -1,0 +1,25 @@
+[debug] [2018-09-11T16:35:42.020Z] ----------------------------------------------------------------------
+[debug] [2018-09-11T16:35:42.057Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\cypherOS\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy
+[debug] [2018-09-11T16:35:42.058Z] CLI Version:   4.0.0
+[debug] [2018-09-11T16:35:42.058Z] Platform:      win32
+[debug] [2018-09-11T16:35:42.059Z] Node Version:  v8.11.3
+[debug] [2018-09-11T16:35:42.060Z] Time:          Tue Sep 11 2018 21:35:42 GMT+0500 (Pakistan Standard Time)
+[debug] [2018-09-11T16:35:42.060Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-09-11T16:35:42.128Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-09-11T16:35:42.134Z] > authorizing via signed-in user
+[debug] [2018-09-11T16:35:42.140Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/upworkbot-65288  
+  
+ Tue Sep 11 2018 21:35:42 GMT+0500 (Pakistan Standard Time)
+[debug] [2018-09-11T16:35:43.640Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-11T16:35:43.643Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/upworkbot-65288/tokens  
+  
+ Tue Sep 11 2018 21:35:43 GMT+0500 (Pakistan Standard Time)
+[debug] [2018-09-11T16:35:44.534Z] <<< HTTP RESPONSE 200
+[warn] !  functions: package.json indicates an outdated version of firebase-functions.
+ Please upgrade using npm install --save firebase-functions@latest in your functions directory.
+[info] 
+[info] === Deploying to 'upworkbot-65288'...
+[info] 
+[info] i  deploying functions
+[info] Running command: npm --prefix ./functions/ run lint
